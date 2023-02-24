@@ -441,6 +441,18 @@ void flywheelPIDmovement() {
   }
 }
 
+void catapultMovement() {
+  if(Controller1.ButtonX.pressing()) {
+    catapult.spinFor(forward, 115, degrees, true);
+  }
+  else if(Controller1.ButtonY.pressing()) {
+    catapult.spinFor(forward, 20, degrees, true);
+  }
+  else if(!Controller1.ButtonX.pressing() && !Controller1.ButtonY.pressing()) {
+    catapult.stop();
+  }
+}
+
 void flywheelMovement() {
     /*
     Controller1.ButtonY.pressed(flywheelFast);
@@ -924,8 +936,9 @@ void usercontrol(void) {
     intakeRollerMovement();
     pistonIndexerMovement();
     expansionMovement();
-    flywheelPIDmovement();
-    indexerMovement();
+    //flywheelPIDmovement();
+    catapultMovement();
+    //indexerMovement();
     platformMode();
     /*if(Controller1.ButtonLeft.pressing() && Controller1.ButtonRight.pressing()){
       RightLift.stop(hold);

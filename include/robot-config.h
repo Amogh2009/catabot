@@ -10,6 +10,7 @@ extern motor LeftBack;
 extern motor RightBack;
 extern motor LeftMiddle;
 extern motor RightMiddle;
+extern motor catapult;
 extern inertial Inertial;
 extern digital_out Expansion;
 extern digital_out pneumaticsIndexer;
