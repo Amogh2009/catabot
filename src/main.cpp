@@ -476,14 +476,16 @@ void catapultMovement() {
   }*/
   if(Controller1.ButtonX.pressing()) {
     while(!LimitSwitchH.pressing()) {
-    catapult.spin(forward, 70, percent); }
+      catapult.spin(forward, 70, percent); 
+    }
   }
   else if(Controller1.ButtonY.pressing()) {
     catapult.spinFor(fwd, 50, degrees, true);
   }
   else if(!Controller1.ButtonX.pressing() && !Controller1.ButtonY.pressing()) {
     while(LimitSwitchH.pressing()) {
-    catapult.stop(); }
+      catapult.stop();
+    }
   }
 }
 
