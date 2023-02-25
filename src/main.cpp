@@ -30,8 +30,15 @@
 using namespace vex;
 // A global instance of competition
 competition Competition;
+bool limitStatus;
 //Function for determining whether input is positive, negative, or 0
+void checkLimit(){
+  limitStatus = true;
 
+}
+void stopLimit(){
+  limitStatus = false;
+}
 int autonselect = 1;
 int numOfAutons = 7;
 
@@ -202,6 +209,27 @@ void simpleDrive(){
   LeftMiddle.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
 }
 
+void catapultMovement() {
+  catapult.setStopping(hold);
+  catapult.setVelocity(100, pct);
+  if(Controller1.ButtonX.pressing()) {
+    if(!LimitSwitchH.pressing()) {
+      catapult.spin(fwd);
+    }
+  }
+  else if(Controller1.ButtonY.pressing()) {
+    catapult.spinFor(fwd, 100, degrees, true);
+    if(!LimitSwitchH.pressing()) {
+      catapult.spin(fwd);
+    }
+  }
+  else if(!Controller1.ButtonX.pressing() && !Controller1.ButtonY.pressing()) {
+    if(LimitSwitchH.pressing()) {
+      catapult.stop();
+    }
+  }
+}
+
 /*void Forward(){
   LeftFront.setStopping(coast);
   LeftMiddle.setStopping(hold);
@@ -235,6 +263,8 @@ void flywheel_spin_fwd(double flywheel_target_speed_pct) {
   Flywheel1.spin(directionType::fwd);
   Flywheel2.spin(directionType::rev);
 }
+
+
 
 //flywheel spin PID code
 void flywheel_spin_fwd_PID(double flywheel_target_speed_pct){
@@ -462,30 +492,6 @@ void flywheelPIDmovement() {
   else if(!Controller1.ButtonX.pressing() && !Controller1.ButtonY.pressing()) {
     Flywheel1.stop();
     Flywheel2.stop();
-  }
-}
-
-void catapultMovement() {
-  catapult.setStopping(hold);
-  catapult.setVelocity(70, pct);
-  /*if(Controller1.ButtonL1.pressing()) {
-    catapult.spinFor(forward, 2230, degrees, true);
-  }
-  else if(Controller1.ButtonL2.pressing()) {
-    catapult.spinFor(forward, 90, degrees, true);
-  }*/
-  if(Controller1.ButtonX.pressing()) {
-    while(!LimitSwitchH.pressing()) {
-      catapult.spin(forward, 70, percent); 
-    }
-  }
-  else if(Controller1.ButtonY.pressing()) {
-    catapult.spinFor(fwd, 50, degrees, true);
-  }
-  else if(!Controller1.ButtonX.pressing() && !Controller1.ButtonY.pressing()) {
-    while(LimitSwitchH.pressing()) {
-      catapult.stop();
-    }
   }
 }
 
@@ -975,6 +981,15 @@ void usercontrol(void) {
     expansionMovement();
     //flywheelPIDmovement();
     catapultMovement();
+    /*while(limitStatus==true){
+      if(!LimitSwitchH.pressing()){
+        catapult.spin(forward, 70, percent);
+      }
+      if(LimitSwitchH.pressing()){
+        catapult.stop(hold);
+        stopLimit();
+      }
+    }*/
     //indexerMovement();
     platformMode();
     /*if(Controller1.ButtonLeft.pressing() && Controller1.ButtonRight.pressing()){
