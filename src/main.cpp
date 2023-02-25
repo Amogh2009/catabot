@@ -108,7 +108,7 @@ void PID (double kP, double kI, double kD, double maxIntegral, double tolerance,
 }
 //Void that controls the drivetrain based on inputs from the joysticks
 
-double speedFactor = 3;
+double speedFactor = 9;
 
 void setStopping(vex::brakeType stoppingType) {
   LeftFront.setStopping(stoppingType);
@@ -201,6 +201,20 @@ void simpleDrive(){
   LeftBack.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
   LeftMiddle.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
 }
+
+/*void Forward(){
+  LeftFront.setStopping(coast);
+  LeftMiddle.setStopping(hold);
+  LeftBack.setStopping(hold);
+  RightFront.setStopping(hold);
+  RightMiddle.setStopping(hold);
+  RightBack.setStopping(hold);
+
+  double currentVel = vel;
+  double sign = getSign(dist);
+  double target = initalPos+InchtoDegree(dist);
+  double initialAngle = Intertial.rotation(degrees);
+}*/
 
 bool Controller1XY = true;
 
@@ -349,15 +363,25 @@ void TempBattery() {
 }
 
 void intakeRollerMovement() {
-  if(Controller1.ButtonR1.pressing()){
-    IntakeRoller.setVelocity(100, percent);
+  if(Controller1.ButtonR2.pressing()){
+    IntakeRoller.setVelocity(95, percent);
     IntakeRoller.spin(forward);
   }
-  else if(Controller1.ButtonR2.pressing()){
+  else if(Controller1.ButtonR1.pressing()){
     IntakeRoller.setVelocity(100, percent);
     IntakeRoller.spin(reverse);
   }
   else{
+    IntakeRoller.setStopping(hold);
+    IntakeRoller.stop();
+  }
+}
+
+void slowRollerMovement() {
+  if(Controller1.ButtonL1.pressing()) {
+    IntakeRoller.setVelocity(50, pct);
+    IntakeRoller.spin(fwd);
+  } else {
     IntakeRoller.setStopping(hold);
     IntakeRoller.stop();
   }
@@ -442,11 +466,20 @@ void flywheelPIDmovement() {
 }
 
 void catapultMovement() {
-  if(Controller1.ButtonX.pressing()) {
-    catapult.spinFor(forward, 115, degrees, true);
+  catapult.setStopping(hold);
+  catapult.setVelocity(70, pct);
+  if(Controller1.ButtonL1.pressing()) {
+    catapult.spinFor(forward, 2230, degrees, true);
+  }
+  else if(Controller1.ButtonL2.pressing()) {
+    catapult.spinFor(forward, 90, degrees, true);
+  }
+  else if(Controller1.ButtonX.pressing()) {
+    while(!limitSwitch)
+    catapult.spin(forward, 70, percent);
   }
   else if(Controller1.ButtonY.pressing()) {
-    catapult.spinFor(forward, 20, degrees, true);
+    catapult.spinFor(fwd, 50, degrees, true);
   }
   else if(!Controller1.ButtonX.pressing() && !Controller1.ButtonY.pressing()) {
     catapult.stop();
@@ -934,6 +967,7 @@ void usercontrol(void) {
     simpleDrive();
     //TempBattery();
     intakeRollerMovement();
+    //slowRollerMovement();
     pistonIndexerMovement();
     expansionMovement();
     //flywheelPIDmovement();
