@@ -18,7 +18,7 @@ extern motor IntakeRoller;
 extern motor Flywheel1;
 extern motor Flywheel2;
 extern motor Indexer;
-extern digital_in limitSwitch;
+extern limit LimitSwitchH;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

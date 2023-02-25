@@ -468,21 +468,22 @@ void flywheelPIDmovement() {
 void catapultMovement() {
   catapult.setStopping(hold);
   catapult.setVelocity(70, pct);
-  if(Controller1.ButtonL1.pressing()) {
+  /*if(Controller1.ButtonL1.pressing()) {
     catapult.spinFor(forward, 2230, degrees, true);
   }
   else if(Controller1.ButtonL2.pressing()) {
     catapult.spinFor(forward, 90, degrees, true);
-  }
-  else if(Controller1.ButtonX.pressing()) {
-    while(!limitSwitch)
-    catapult.spin(forward, 70, percent);
+  }*/
+  if(Controller1.ButtonX.pressing()) {
+    while(!LimitSwitchH.pressing()) {
+    catapult.spin(forward, 70, percent); }
   }
   else if(Controller1.ButtonY.pressing()) {
     catapult.spinFor(fwd, 50, degrees, true);
   }
   else if(!Controller1.ButtonX.pressing() && !Controller1.ButtonY.pressing()) {
-    catapult.stop();
+    while(LimitSwitchH.pressing()) {
+    catapult.stop(); }
   }
 }
 
