@@ -166,6 +166,38 @@ void move(vex::directionType direction, int time) {
   wait(500, msec);
 }
 
+void turnLeft(int time) {
+  LeftFront.spin(reverse);
+  LeftMiddle.spin(reverse);
+  LeftBack.spin(reverse);
+  RightFront.spin(fwd);
+  RightMiddle.spin(fwd);
+  RightBack.spin(fwd);
+  wait(time, msec);
+  LeftFront.stop(hold);
+  LeftMiddle.stop(hold);
+  LeftBack.stop(hold);
+  RightFront.stop(hold);
+  RightMiddle.stop(hold);
+  RightBack.stop(hold);
+}
+
+void turnRight(int time) {
+  LeftFront.spin(fwd);
+  LeftMiddle.spin(fwd);
+  LeftBack.spin(fwd);
+  RightFront.spin(reverse);
+  RightMiddle.spin(reverse);
+  RightBack.spin(reverse);
+  wait(time, msec);
+  LeftFront.stop(hold);
+  LeftMiddle.stop(hold);
+  LeftBack.stop(hold);
+  RightFront.stop(hold);
+  RightMiddle.stop(hold);
+  RightBack.stop(hold);
+}
+
 void moveLeftDrivetrain(vex::directionType direction, int rotation) {
   LeftFront.spinFor(direction, rotation, degrees, false);
   LeftBack.spinFor(direction, rotation, degrees, true);
@@ -722,37 +754,13 @@ void autonomous(void) {
 
       move(reverse, 425);
 
-      LeftFront.spin(reverse);
-      LeftMiddle.spin(reverse);
-      LeftBack.spin(reverse);
-      RightFront.spin(fwd);
-      RightMiddle.spin(fwd);
-      RightBack.spin(fwd);
-      wait(800, msec);
-      LeftMiddle.stop(hold);
-      LeftFront.stop(hold);
-      LeftBack.stop(hold);
-      RightFront.stop(hold);
-      RightMiddle.stop(hold);
-      RightBack.stop(hold);
+      turnLeft(800);
       wait(100, msec);
       IntakeRoller.spin(reverse);
       move(forward, 1200);
       wait(500 , msec);
       IntakeRoller.stop();
-      LeftFront.spin(fwd);
-      LeftMiddle.spin(fwd);
-      LeftBack.spin(fwd);
-      RightFront.spin(reverse);
-      RightMiddle.spin(reverse);
-      RightBack.spin(reverse);
-      wait(700, msec);
-      LeftMiddle.stop(hold);
-      LeftFront.stop(hold);
-      LeftBack.stop(hold);
-      RightFront.stop(hold);
-      RightMiddle.stop(hold);
-      RightBack.stop(hold);
+      turnRight(700);
       break;
     }
     case 2: { //1 Roller + Low Goal
