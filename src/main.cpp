@@ -127,8 +127,10 @@ void setStopping(vex::brakeType stoppingType) {
 void setVelocity(int velocity) {
   LeftFront.setVelocity(velocity, percent);
   LeftBack.setVelocity(velocity, percent);
+  LeftMiddle.setVelocity(velocity, percent);
   RightFront.setVelocity(velocity, percent);
   RightBack.setVelocity(velocity, percent);
+  RightMiddle.setVelocity(velocity, percent);
 }
 
 typedef int turntype;
@@ -152,11 +154,15 @@ void move(vex::directionType direction, int time) {
   RightFront.spin(direction);
   LeftBack.spin(direction);
   RightBack.spin(direction);
+  LeftMiddle.spin(direction);
+  RightMiddle.spin(direction);
   wait(time, msec);
-  LeftFront.stop();
-  RightFront.stop();
-  LeftBack.stop();
-  RightBack.stop();
+  LeftFront.stop(hold);
+  RightFront.stop(hold);
+  LeftBack.stop(hold);
+  RightBack.stop(hold);
+  LeftMiddle.stop(hold);
+  RightMiddle.stop(hold);
   wait(500, msec);
 }
 
@@ -709,11 +715,44 @@ void autonomous(void) {
     }
     case 1:{ //1 Roller
       IntakeRoller.setVelocity(100, percent);
-      IntakeRoller.spinFor(reverse, 5000, degrees, false);
+      //IntakeRoller.spinFor(reverse, 5000, degrees, false);
+      setVelocity(25);
 
-      move(forward, 50);
+      move(forward, 300);
 
-      move(reverse, 75);
+      move(reverse, 425);
+
+      LeftFront.spin(reverse);
+      LeftMiddle.spin(reverse);
+      LeftBack.spin(reverse);
+      RightFront.spin(fwd);
+      RightMiddle.spin(fwd);
+      RightBack.spin(fwd);
+      wait(800, msec);
+      LeftMiddle.stop(hold);
+      LeftFront.stop(hold);
+      LeftBack.stop(hold);
+      RightFront.stop(hold);
+      RightMiddle.stop(hold);
+      RightBack.stop(hold);
+      wait(100, msec);
+      IntakeRoller.spin(reverse);
+      move(forward, 1200);
+      wait(500 , msec);
+      IntakeRoller.stop();
+      LeftFront.spin(fwd);
+      LeftMiddle.spin(fwd);
+      LeftBack.spin(fwd);
+      RightFront.spin(reverse);
+      RightMiddle.spin(reverse);
+      RightBack.spin(reverse);
+      wait(700, msec);
+      LeftMiddle.stop(hold);
+      LeftFront.stop(hold);
+      LeftBack.stop(hold);
+      RightFront.stop(hold);
+      RightMiddle.stop(hold);
+      RightBack.stop(hold);
       break;
     }
     case 2: { //1 Roller + Low Goal
