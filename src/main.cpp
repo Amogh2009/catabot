@@ -759,7 +759,6 @@ void autonomous(void) {
       wait(15, msec);
       IntakeRoller.stop();
       move(reverse, 425);
-
       turnLeft(825);
       wait(100, msec);
       IntakeRoller.spin(reverse);
@@ -778,7 +777,6 @@ void autonomous(void) {
       wait(100, msec);
       IntakeRoller.spin(reverse);
       move(fwd, 400);
-      //wait(1, sec);
       turnRight(630);
       wait(100, msec);
       move(reverse, 445);
