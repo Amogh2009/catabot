@@ -768,7 +768,7 @@ void autonomous(void) {
       IntakeRoller.stop();
       turnRight(690);
       wait(100, msec);
-      move(reverse, 300);
+      move(reverse, 400);
       wait(100, msec);
       catapult.spinFor(forward, 150, degrees, true);
       catapult.spinFor(forward, 1985, degrees, false);
@@ -781,7 +781,7 @@ void autonomous(void) {
       //wait(1, sec);
       turnRight(630);
       wait(100, msec);
-      move(reverse, 345);
+      move(reverse, 445);
       wait(1250, msec);
       IntakeRoller.stop();
       catapult.spinFor(forward, 150, degrees, true);
