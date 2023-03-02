@@ -412,19 +412,23 @@ void pistonIndexerMovement(void) {
 }
 
 void TempBattery() {
-  wait(30000, msec);
+  wait(500, msec);
   
   Controller1.Screen.setCursor(1, 1);
   Controller1.Screen.print("Motor Temps (%)");
   Controller1.Screen.newLine();
-  Controller1.Screen.print(LeftBack.temperature(percent));
+  Controller1.Screen.print(catapult.temperature(percent));
   Controller1.Screen.print(",");
+  //Controller1.Screen.print(LeftBack.temperature(percent));
+  //Controller1.Screen.print(",");
   Controller1.Screen.print(LeftFront.temperature(percent));
   Controller1.Screen.print(",");
-  Controller1.Screen.print(RightBack.temperature(percent));
+  Controller1.Screen.print(IntakeRoller.temperature(percent));
+  Controller1.Screen.print(",");
+  /*Controller1.Screen.print(RightBack.temperature(percent));
   Controller1.Screen.print(",");
   Controller1.Screen.print(RightFront.temperature(percent));
-  Controller1.Screen.print(",");
+  Controller1.Screen.print(",");*/
   Controller1.Screen.newLine();
   Controller1.Screen.print("Battery: ");
   Controller1.Screen.print(vexBatteryCapacityGet());
@@ -679,7 +683,7 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
 //----------------------------------------------------------------------------------
 
 int selected = 0;
-std::string autons[8] = {"Disabled", "1 Roller", "1 Roller + Low Goal", "Disc Shooter", "Roller Other Side", "Disc Shooter Two", "Skills Roller", "AWP2 from Left"};
+std::string autons[8] = {"Disabled", "Normal", "1 Roller + Low Goal", "Disc Shooter", "Roller Other Side", "Disc Shooter Two", "Skills Roller", "AWP2 from Left"};
 int size = sizeof(autons);
 
 bool elevated = false;
@@ -745,22 +749,42 @@ void autonomous(void) {
     case 0:{ //Disabled
       break;
     }
-    case 1:{ //1 Roller
+    case 1:{ // Normal
       IntakeRoller.setVelocity(100, percent);
       //IntakeRoller.spinFor(reverse, 5000, degrees, false);
       setVelocity(25);
-
+      IntakeRoller.spin(forward);
+      catapult.spinFor(fwd, 2265, degrees, false);
       move(forward, 300);
-
+      wait(15, msec);
+      IntakeRoller.stop();
       move(reverse, 425);
 
-      turnLeft(800);
+      turnLeft(825);
       wait(100, msec);
       IntakeRoller.spin(reverse);
-      move(forward, 1200);
-      wait(500 , msec);
+      move(forward, 1250);
+      wait(1 , sec);
       IntakeRoller.stop();
-      turnRight(700);
+      turnRight(690);
+      wait(100, msec);
+      move(reverse, 300);
+      wait(100, msec);
+      catapult.spinFor(forward, 150, degrees, true);
+      catapult.spinFor(forward, 1985, degrees, false);
+      move(fwd, 200);
+      wait(100, msec);
+      turnLeft(710);
+      wait(100, msec);
+      IntakeRoller.spin(reverse);
+      move(fwd, 400);
+      //wait(1, sec);
+      turnRight(630);
+      wait(100, msec);
+      move(reverse, 345);
+      wait(1250, msec);
+      IntakeRoller.stop();
+      catapult.spinFor(forward, 150, degrees, true);
       break;
     }
     case 2: { //1 Roller + Low Goal
