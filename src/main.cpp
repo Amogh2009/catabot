@@ -115,7 +115,7 @@ void PID (double kP, double kI, double kD, double maxIntegral, double tolerance,
 }
 //Void that controls the drivetrain based on inputs from the joysticks
 
-double speedFactor = 9;
+double speedFactor = 20;
 
 void setStopping(vex::brakeType stoppingType) {
   LeftFront.setStopping(stoppingType);
@@ -436,7 +436,7 @@ void TempBattery() {
 
 void intakeRollerMovement() {
   if(Controller1.ButtonR2.pressing()){
-    IntakeRoller.setVelocity(95, percent);
+    IntakeRoller.setVelocity(100, percent);
     IntakeRoller.spin(forward);
   }
   else if(Controller1.ButtonR1.pressing()){
@@ -683,7 +683,7 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
 //----------------------------------------------------------------------------------
 
 int selected = 0;
-std::string autons[8] = {"Disabled", "Normal", "1 Roller + Low Goal", "Disc Shooter", "Roller Other Side", "Disc Shooter Two", "Skills Roller", "AWP2 from Left"};
+std::string autons[8] = {"Disabled", "Normal", "1 Roller + Low Goal", "1 Roller", "Roller Other Side", "Disc Shooter Two", "Skills Roller", "AWP2 from Left"};
 int size = sizeof(autons);
 
 bool elevated = false;
@@ -835,60 +835,16 @@ void autonomous(void) {
       Flywheel2.stop();
       break;
     }
-    case 3: { //Disc Shooter
-      botTurn3Motor(::left, 35);
-      flywheelSpin(91.2);
-      wait(4200, msec);
-      //flywheel_spin_fwd_PID(95);
-      //wait(3000, msec);
-      autonIndexer();
-      wait(4000, msec);
-      autonIndexer();
-      wait(200, msec);
-      Flywheel1.stop();
-      Flywheel2.stop();
-      wait(500, msec);
-      LeftFront.spin(reverse);
-      LeftBack.spin(reverse);
-      RightFront.spin(forward);
-      RightBack.spin(forward);
-      wait(350, msec);
-      LeftFront.stop();
-      LeftBack.stop();
-      RightFront.stop();
-      RightBack.stop();
-      //
-      wait(500, msec);
-      LeftFront.spin(forward);
-      LeftBack.spin(forward);
-      RightFront.spin(forward);
-      RightBack.spin(forward);
-      wait(250, msec);
-      LeftFront.stop();
-      LeftBack.stop();
-      RightFront.stop();
-      RightBack.stop();
-      wait(500, msec);
-      LeftFront.spin(reverse);
-      LeftBack.spin(reverse);
-      RightFront.spin(forward);
-      RightBack.spin(forward);
-      wait(1300, msec);
-      LeftFront.stop();
-      LeftBack.stop();
-      RightFront.stop();
-      RightBack.stop();
-      wait(500, msec);
-      IntakeRoller.spinFor(reverse, 800, degrees, false);
-      LeftFront.spin(forward);
-      LeftBack.spin(forward);
-      RightFront.spin(forward);
-      RightBack.spin(forward);
-      wait(800, msec);
-      LeftFront.stop();
-      LeftBack.stop();
-      RightFront.stop();
-      RightBack.stop();
+    case 3: { //1 Roller
+      IntakeRoller.setVelocity(100, percent);
+      //IntakeRoller.spinFor(reverse, 5000, degrees, false);
+      setVelocity(25);
+      IntakeRoller.spin(forward);
+      //catapult.spinFor(fwd, 2265, degrees, false);
+      move(forward, 300);
+      wait(15, msec);
+      IntakeRoller.stop();
+      move(reverse, 425);
       break; 
     }
     case 4: { //Roller Other Side
