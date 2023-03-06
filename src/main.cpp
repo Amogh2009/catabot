@@ -115,7 +115,7 @@ void PID (double kP, double kI, double kD, double maxIntegral, double tolerance,
 }
 //Void that controls the drivetrain based on inputs from the joysticks
 
-double speedFactor = 20;
+double speedFactor = 50;
 
 void setStopping(vex::brakeType stoppingType) {
   LeftFront.setStopping(stoppingType);
@@ -236,7 +236,7 @@ void platformMode() {
   }
 }
 
-void simpleDrive(){
+/*void simpleDrive(){
   double forwardAmount = Controller1.Axis3.position();
   double turnAmount = Controller1.Axis4.position(); //Axis 4 for unified joystick
   RightFront.spin(forward, (forwardAmount-turnAmount) / speedFactor, percent);
@@ -245,6 +245,29 @@ void simpleDrive(){
   LeftFront.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
   LeftBack.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
   LeftMiddle.spin(forward, (forwardAmount+turnAmount) / speedFactor, percent);
+}*/
+void simpleDrive() {
+  double forwardAmount = Controller1.Axis3.position();
+  double turnAmount = Controller1.Axis4.position();
+  double deadband = 10.0; // adjust this value to change the deadband size
+  double forwardPower = 0.0;
+  double turnPower = 0.0;
+  if (abs(forwardAmount) > deadband) {
+    forwardPower = (forwardAmount - (abs(forwardAmount) / forwardAmount * deadband)) / speedFactor;
+  }
+  if (abs(turnAmount) > deadband) {
+    turnPower = (turnAmount - (abs(turnAmount) / turnAmount * deadband)) / speedFactor;
+  }
+  RightFront.spin(forward, (forwardPower-turnPower), percent);
+  RightBack.spin(forward, (forwardPower-turnPower), percent);
+  RightMiddle.spin(forward, (forwardPower-turnPower), percent);
+  LeftFront.spin(forward, (forwardPower+turnPower), percent);
+  LeftBack.spin(forward, (forwardPower+turnPower), percent);
+  LeftMiddle.spin(forward, (forwardPower+turnPower), percent);
+}
+
+void catapultStop() {
+  catapult.stop(hold);
 }
 
 void catapultMovement() {
@@ -256,7 +279,7 @@ void catapultMovement() {
     }
   }
   else if(Controller1.ButtonY.pressing()) {
-    catapult.spinFor(fwd, 100, degrees, true);
+    catapult.spinFor(fwd, 200, degrees, true);
     if(!LimitSwitchH.pressing()) {
       catapult.spin(fwd);
     }
@@ -444,7 +467,7 @@ void intakeRollerMovement() {
     IntakeRoller.spin(reverse);
   }
   else{
-    IntakeRoller.setStopping(hold);
+    IntakeRoller.setStopping(coast);
     IntakeRoller.stop();
   }
 }
@@ -787,52 +810,17 @@ void autonomous(void) {
     }
     case 2: { //1 Roller + Low Goal
       IntakeRoller.setVelocity(100, percent);
-      IntakeRoller.spinFor(reverse, 800, degrees, false);
-
-      move(forward, 200);
-
-      //move(reverse, 200);
-
-      flywheelSpin(70);
-
-      wait(2500, msec);
-
-      LeftFront.spin(reverse);
-      LeftBack.spin(reverse);
-      RightFront.spin(reverse);
-      RightBack.spin(reverse);
-
-      wait(300, msec);
-      
-      LeftFront.stop();
-      LeftBack.stop();
-      RightFront.stop();
-      RightBack.stop();
-
-      wait(1, sec);
-
-      LeftFront.spin(reverse);
-      LeftBack.spin(reverse);
-      RightFront.spin(forward);
-      RightBack.spin(forward);
-
-      wait (850, msec);
-
-      LeftFront.stop();
-      LeftBack.stop();
-      RightFront.stop();
-      RightBack.stop();
-
-      wait (500, msec);
-
-      autonIndexer();
-      wait(500, msec);
-      autonIndexer();
-
-      wait(2, sec);
-
-      Flywheel1.stop();
-      Flywheel2.stop();
+      //IntakeRoller.spinFor(reverse, 5000, degrees, false);
+      setVelocity(25);
+      IntakeRoller.spin(forward);
+      catapult.spinFor(fwd, 2265, degrees, false);
+      move(forward, 300);
+      wait(15, msec);
+      IntakeRoller.stop();
+      move(reverse, 425);
+      turnLeft(500);
+      wait(100, msec);
+      catapult.spinFor(forward, 150, degrees, true);
       break;
     }
     case 3: { //1 Roller
@@ -970,20 +958,50 @@ void autonomous(void) {
       break;
     }
     case 6: { // Skills Roller
+    IntakeRoller.setVelocity(100, percent);
     setStopping(hold);
-    setVelocity(69);
-    IntakeRoller.spin(reverse);
-    move(fwd, 200);
-    wait(120, msec);
+    setVelocity(10);
+    //catapult.spinFor(fwd, 2265, degrees, false);
+    catapult.spin(fwd, 100, pct);
+    LimitSwitchH.pressed(catapultStop);
+    move(forward, 750); 
+    IntakeRoller.spin(forward); //roller
+    wait(175, msec);
+    IntakeRoller.stop(); 
+    move(reverse, 625); 
+    //wait(20, msec);
+    setVelocity(15); // turn to get 3rd disc
+    turnRight(1150);
+    wait(20, msec);
+    IntakeRoller.spin(reverse); // 2nd roller
+    move(forward, 2250);
     IntakeRoller.stop();
-    move(reverse, 630);
-    LeftFront.spin(fwd);
-    LeftBack.spin(fwd);
-    RightFront.spin(reverse);
-    RightBack.spin(reverse);
-    wait(120, msec);
-    move(fwd, 200);
-    Expansion.set(true);
+    setVelocity(5);
+    turnLeft(350);
+    move(forward, 785);
+    //wait(10, msec);
+    IntakeRoller.spin(fwd);
+    wait(300, msec);
+    IntakeRoller.stop();
+    move(reverse, 1100); // moving to shoot in high goal
+    setVelocity(25);
+    turnLeft(700);
+    wait(100, msec);
+    setVelocity(50);
+    move(reverse, 1400);
+    turnRight(175);
+    wait(100, msec);
+    catapult.spin(fwd); // shoots discs
+    LimitSwitchH.pressed(catapultStop);
+    wait(300, msec);
+    turnLeft(175); // getting 2nd set of 3 discs
+    wait(50, msec);
+    IntakeRoller.spin(reverse);
+    move(fwd, 900);
+    setVelocity(15);
+    turnLeft(950);
+    move(fwd, 3000);
+    IntakeRoller.stop();
     break;
   }
   } 
