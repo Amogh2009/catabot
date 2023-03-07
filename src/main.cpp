@@ -706,7 +706,7 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
 //----------------------------------------------------------------------------------
 
 int selected = 0;
-std::string autons[8] = {"Disabled", "Normal", "1 Roller + Low Goal", "1 Roller", "Roller Other Side", "Disc Shooter Two", "Skills Roller", "AWP2 from Left"};
+std::string autons[8] = {"Disabled", "Normal", "1 Roller + Low Goal", "1 Roller", "Roller Other Side", "Disc Shooter Two", "Skills"};
 int size = sizeof(autons);
 
 bool elevated = false;
@@ -755,7 +755,6 @@ void pre_auton(void) {
  // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   pneumaticsIndexer.set(false);
-  Brain.Screen.drawImageFromFile("bike discord banner.png", 0, 0);
   Inertial.calibrate();
   wait(3, sec);
   autonSelector();
@@ -957,7 +956,7 @@ void autonomous(void) {
       Flywheel2.stop();
       break;
     }
-    case 6: { // Skills Roller
+    case 6: { // Skills
     IntakeRoller.setVelocity(100, percent);
     setStopping(hold);
     setVelocity(10);

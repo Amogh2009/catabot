@@ -16,7 +16,7 @@ motor RightBack = motor(PORT17, ratio18_1, true);
 motor LeftMiddle = motor(PORT15, ratio18_1, false);
 motor RightMiddle = motor(PORT18, ratio18_1, true);
 motor catapult = motor(PORT12, ratio18_1, false);
-inertial Inertial = inertial(PORT21);
+inertial Inertial = inertial(PORT20);
 limit LimitSwitchH = limit(Brain.ThreeWirePort.F);
 
 digital_out Expansion = digital_out(Brain.ThreeWirePort.D);
