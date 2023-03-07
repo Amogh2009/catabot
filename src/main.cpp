@@ -755,8 +755,8 @@ void pre_auton(void) {
  // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   pneumaticsIndexer.set(false);
-  Inertial.calibrate();
-  wait(3, sec);
+  calibrateInertialSensor();
+  wait(5, sec);
   autonSelector();
 
 }

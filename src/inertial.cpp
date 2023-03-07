@@ -2,6 +2,20 @@
 
 using namespace vex;
 
+void calibrateInertialSensor(void) {
+  Inertial.calibrate();
+
+  if(Inertial.isCalibrating()) {
+    joystick.Screen.clearLine(3);
+    joystick.Screen.print("calibrating");
+  }
+
+  joystick.Screen.clearLine(3);
+  joystick.Screen.print("done");
+  joystick.rumble("...");
+  wait(10, msec);
+}
+
 void inertialTurnClockwise(double targetHeading) {
   double currentError = targetHeading - Inertial.heading();
   double Kp = 0.5;

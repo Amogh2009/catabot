@@ -4,6 +4,7 @@ extern brain Brain;
 
 // VEXcode devices
 extern controller Controller1;
+extern controller joystick;
 extern motor LeftFront;
 extern motor RightFront;
 extern motor LeftBack;
@@ -28,3 +29,4 @@ extern limit LimitSwitchH;
 void  vexcodeInit( void );
 void inertialTurnClockwise(double targetHeading);
 void inertialTurnCounterClockwise(double targetHeading);
+void calibrateInertialSensor(void);
