@@ -26,4 +26,5 @@ extern limit LimitSwitchH;
  * This should be called at the start of your int main function.
  */
 void  vexcodeInit( void );
-void inertialTurnHeading(double targetHeading);
+void inertialTurnClockwise(double targetHeading);
+void inertialTurnCounterClockwise(double targetHeading);

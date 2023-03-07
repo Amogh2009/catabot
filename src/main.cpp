@@ -706,7 +706,7 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
 //----------------------------------------------------------------------------------
 
 int selected = 0;
-std::string autons[8] = {"Disabled", "Normal", "1 Roller + Low Goal", "1 Roller", "Roller Other Side", "Disc Shooter Two", "Skills"};
+std::string autons[8] = {"Disabled", "Normal", "1 Roller + Low Goal", "1 Roller", "Roller Other Side", "Disc Shooter Two", "Skills", "Inertial Test"};
 int size = sizeof(autons);
 
 bool elevated = false;
@@ -1002,6 +1002,11 @@ void autonomous(void) {
     move(fwd, 3000);
     IntakeRoller.stop();
     break;
+  }
+  case 7: { //inertial test
+    inertialTurnClockwise(180);
+    wait(1, seconds);
+    inertialTurnCounterClockwise(90);
   }
   } 
 }
