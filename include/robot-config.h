@@ -30,3 +30,7 @@ void  vexcodeInit( void );
 void inertialTurnClockwise(double targetHeading);
 void inertialTurnCounterClockwise(double targetHeading);
 void calibrateInertialSensor(void);
+void setStopping(vex::brakeType stoppingType);
+void drivetrainStop(void);
+void turnClockwise(double amount);
+void turnCounterClockwise(double amount);

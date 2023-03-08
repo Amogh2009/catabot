@@ -119,8 +119,10 @@ double speedFactor = 50;
 
 void setStopping(vex::brakeType stoppingType) {
   LeftFront.setStopping(stoppingType);
+  LeftMiddle.setStopping(stoppingType);
   LeftBack.setStopping(stoppingType);
   RightFront.setStopping(stoppingType);
+  RightMiddle.setStopping(stoppingType);
   RightBack.setStopping(stoppingType);
 }
 
@@ -166,6 +168,20 @@ void move(vex::directionType direction, int time) {
   wait(500, msec);
 }
 
+void moveWithoutStop(vex::directionType direction, int time) {
+  /*LeftFront.spinFor(direction, rotation, degrees, false);
+  LeftBack.spinFor(direction, rotation, degrees, false);
+  RightFront.spinFor(direction, rotation, degrees, false);
+  RightBack.spinFor(direction, rotation, degrees, true);*/
+  LeftFront.spin(direction);
+  RightFront.spin(direction);
+  LeftBack.spin(direction);
+  RightBack.spin(direction);
+  LeftMiddle.spin(direction);
+  RightMiddle.spin(direction);
+  wait(time, msec);
+}
+
 void turnLeft(int time) {
   LeftFront.spin(reverse);
   LeftMiddle.spin(reverse);
@@ -198,14 +214,25 @@ void turnRight(int time) {
   RightBack.stop(hold);
 }
 
-void moveLeftDrivetrain(vex::directionType direction, int rotation) {
-  LeftFront.spinFor(direction, rotation, degrees, false);
-  LeftBack.spinFor(direction, rotation, degrees, true);
+void moveLeftDrivetrain(vex::directionType direction) {
+  LeftFront.spin(direction);
+  LeftMiddle.spin(direction);
+  LeftBack.spin(direction);
 }
 
-void moveRightDrivetrain(vex::directionType direction, int rotation) {
-  RightFront.spinFor(direction, rotation, degrees, false);
-  RightBack.spinFor(direction, rotation, degrees, true);
+void moveRightDrivetrain(vex::directionType direction) {
+  RightFront.spin(direction);
+  RightMiddle.spin(direction);
+  RightBack.spin(direction);
+}
+
+void drivetrainStop(void) {
+  LeftFront.stop(hold);
+  LeftMiddle.stop(hold);
+  LeftBack.stop(hold);
+  RightFront.stop(hold);
+  RightMiddle.stop(hold);
+  RightBack.stop(hold);
 }
 
 void botTurn3Motor(turntype direction, int rotation) {
@@ -626,7 +653,7 @@ void indexerMovement() {
   }
 }
 
-void turnCounterClockwise(double amount){
+/*void turnCounterClockwise(double amount){
   Inertial.setRotation(0, degrees);
   while(fabs(Inertial.rotation(degrees)) < amount){
     double error = amount - fabs(Inertial.rotation(degrees));
@@ -645,9 +672,9 @@ void turnCounterClockwise(double amount){
   RightFront.stop();
   LeftFront.stop();
   wait(0.5, sec);
-}
+}*/
 
-void turnClockwise(double amount){
+/*void turnClockwise(double amount){
   Inertial.setRotation(0, degrees);
   while(fabs(Inertial.rotation(degrees))< amount){
     double error = amount - fabs(Inertial.rotation(degrees));
@@ -666,7 +693,7 @@ void turnClockwise(double amount){
   RightFront.stop();
   LeftFront.stop();
   wait(0.5, sec);
-}
+}*/
 
 void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
   LeftFront.setStopping(coast);
@@ -826,12 +853,26 @@ void autonomous(void) {
       IntakeRoller.setVelocity(100, percent);
       //IntakeRoller.spinFor(reverse, 5000, degrees, false);
       setVelocity(25);
-      IntakeRoller.spin(forward);
+      //IntakeRoller.spin(forward);
       //catapult.spinFor(fwd, 2265, degrees, false);
+      catapult.spin(fwd, 100, pct);
+      LimitSwitchH.pressed(catapultStop);
       move(forward, 300);
-      wait(15, msec);
-      IntakeRoller.stop();
+      //wait(15, msec);
+      IntakeRoller.spin(forward); //roller
+      wait(100, msec);
+      IntakeRoller.stop(); 
+      //IntakeRoller.stop();
       move(reverse, 425);
+      wait(500, msec);
+      moveLeftDrivetrain(forward);
+      moveRightDrivetrain(reverse);
+      waitUntil((Inertial.rotation(degrees) >= 90.0));
+      drivetrainStop();
+      wait(50, msec);
+      /*inertialTurnClockwise(180);
+      wait(1, seconds);*/
+      //inertialTurnCounterClockwise(90);
       break; 
     }
     case 4: { //Roller Other Side
@@ -977,17 +1018,22 @@ void autonomous(void) {
     IntakeRoller.stop();
     setVelocity(5);
     turnLeft(350);
-    move(forward, 785);
+    move(forward, 600);
     //wait(10, msec);
     IntakeRoller.spin(fwd);
     wait(300, msec);
     IntakeRoller.stop();
     move(reverse, 1100); // moving to shoot in high goal
     setVelocity(25);
-    turnLeft(700);
+    turnCounterClockwise(115);
     wait(100, msec);
+    setVelocity(25);
+    moveWithoutStop(reverse, 500);
+    setVelocity(37);
+    moveWithoutStop(reverse, 500);
     setVelocity(50);
-    move(reverse, 1400);
+    moveWithoutStop(reverse, 500);
+    wait(500, msec);
     turnRight(175);
     wait(100, msec);
     catapult.spin(fwd); // shoots discs
@@ -996,20 +1042,20 @@ void autonomous(void) {
     turnLeft(175); // getting 2nd set of 3 discs
     wait(50, msec);
     IntakeRoller.spin(reverse);
-    move(fwd, 900);
+    move(fwd, 1100);
     setVelocity(15);
-    turnLeft(950);
+    turnCounterClockwise(130);
     move(fwd, 3000);
     IntakeRoller.stop();
     break;
   }
   case 7: { //inertial test
-    inertialTurnClockwise(180);
-    wait(1, seconds);
-    inertialTurnCounterClockwise(90);
-  }
+     turnClockwise(86.5);
+     wait(1, seconds);
+     break;
   } 
-}
+} // switch
+} // autonomous
 
 
 /*---------------------------------------------------------------------------*/
@@ -1061,4 +1107,3 @@ int main() {
 }
 //test from windows
 //test from mac
-

@@ -3,17 +3,56 @@
 using namespace vex;
 
 void calibrateInertialSensor(void) {
-  Inertial.calibrate();
+  Inertial.startCalibration(0);
 
-  if(Inertial.isCalibrating()) {
+  while(Inertial.isCalibrating()) {
     joystick.Screen.clearLine(3);
     joystick.Screen.print("calibrating");
+    wait(20, msec);
   }
 
   joystick.Screen.clearLine(3);
   joystick.Screen.print("done");
   joystick.rumble("...");
   wait(10, msec);
+}
+
+void turnClockwise(double amount) {
+  Inertial.setRotation(0, degrees);
+  while(fabs(Inertial.rotation(degrees)) < amount) {
+    double error = amount - fabs(Inertial.rotation(degrees));
+    
+    LeftFront.spin(forward, 0.2*error + 5, percent);
+    LeftMiddle.spin(forward, 0.2*error + 5, percent);
+    LeftBack.spin(forward, 0.2*error + 5, percent);
+    RightFront.spin(reverse, 0.2*error + 5, percent);
+    RightMiddle.spin(reverse, 0.2*error + 5, percent);
+    RightBack.spin(reverse, 0.2*error + 5, percent);
+    wait(5, msec);
+  }
+  setStopping(hold);
+  drivetrainStop();
+  wait(0.5, sec);
+  Inertial.setRotation(0, degrees);
+}
+
+void turnCounterClockwise(double amount) {
+  Inertial.setRotation(0, degrees);
+  while(fabs(Inertial.rotation(degrees)) < amount) {
+    double error = amount - fabs(Inertial.rotation(degrees));
+    
+    LeftFront.spin(reverse, 0.2*error + 5, percent);
+    LeftMiddle.spin(reverse, 0.2*error + 5, percent);
+    LeftBack.spin(reverse, 0.2*error + 5, percent);
+    RightFront.spin(forward, 0.2*error + 5, percent);
+    RightMiddle.spin(forward, 0.2*error + 5, percent);
+    RightBack.spin(forward, 0.2*error + 5, percent);
+    wait(5, msec);
+  }
+  setStopping(hold);
+  drivetrainStop();
+  wait(0.5, sec);
+  Inertial.setRotation(0, degrees);
 }
 
 void inertialTurnClockwise(double targetHeading) {
