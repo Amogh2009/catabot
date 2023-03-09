@@ -26,7 +26,6 @@
 #include "vex.h"
 #include <cmath>
 #include <string>
-#include "drivetrainPID.cpp"
 
 using namespace vex;
 // A global instance of competition
@@ -784,7 +783,7 @@ void pre_auton(void) {
   vexcodeInit();
   pneumaticsIndexer.set(false);
   calibrateInertialSensor();
-  wait(5, sec);
+  wait(1, sec);
   autonSelector();
 
 }
@@ -836,18 +835,33 @@ void autonomous(void) {
       break;
     }
     case 2: { //1 Roller + Low Goal
-      IntakeRoller.setVelocity(100, percent);
-      //IntakeRoller.spinFor(reverse, 5000, degrees, false);
-      setVelocity(25);
-      IntakeRoller.spin(forward);
-      catapult.spinFor(fwd, 2265, degrees, false);
-      move(forward, 300);
-      wait(15, msec);
-      IntakeRoller.stop();
-      move(reverse, 425);
-      turnLeft(500);
-      wait(100, msec);
-      catapult.spinFor(forward, 150, degrees, true);
+        setStopping(hold);
+        setVelocity(10);
+        //catapult.spinFor(fwd, 2265, degrees, false);
+        catapult.spin(fwd, 100, pct);
+        LimitSwitchH.pressed(catapultStop);
+        move(forward, 750); 
+        IntakeRoller.spin(forward); //roller
+        wait(225, msec);
+        IntakeRoller.stop(); 
+        move(reverse, 625);
+        turnCounterClockwise(130);
+        IntakeRoller.setVelocity(100, pct);
+        IntakeRoller.spin(reverse);
+        setVelocity(50);
+        move(fwd, 750);
+        setVelocity(15);
+        move(fwd, 2000);
+        IntakeRoller.stop();
+        turnRight(50);
+        IntakeRoller.spin(forward);
+        setVelocity(50);
+        move(fwd, 1700);
+        turnCounterClockwise(50);
+        setVelocity(15);
+        move(fwd, 1650);
+        move(reverse, 750);
+        turnClockwise(80);
       break;
     }
     case 3: { //1 Roller
@@ -1026,7 +1040,7 @@ void autonomous(void) {
     IntakeRoller.stop();
     move(reverse, 1100); // moving to shoot in high goal
     setVelocity(25);
-    turnCounterClockwise(115);
+    turnCounterClockwise(113);
     wait(100, msec);
     setVelocity(25);
     moveWithoutStop(reverse, 500);
@@ -1043,11 +1057,22 @@ void autonomous(void) {
     turnLeft(175); // getting 2nd set of 3 discs
     wait(50, msec);
     IntakeRoller.spin(reverse);
-    move(fwd, 1100);
+    move(fwd, 1300);
     setVelocity(15);
-    turnCounterClockwise(130);
-    move(fwd, 3000);
+    turnCounterClockwise(115);
+    move(fwd, 4800);
+    turnClockwise(120);
+    setVelocity(25); // heading to goal
+    moveWithoutStop(reverse, 230);
+    setVelocity(37);
+    moveWithoutStop(reverse, 230);
+    setVelocity(50);
+    moveWithoutStop(reverse, 315);
+    wait(500, msec);
+    turnCounterClockwise(86.5); // lining up
     IntakeRoller.stop();
+    move(reverse, 700);
+    turnCounterClockwise(30);
     break;
   }
   case 7: { //inertial test
@@ -1065,7 +1090,7 @@ void autonomous(void) {
 /*  a VEX Competition.                                                       */
 /*---------------------------------------------------------------------------*/
 void usercontrol(void) {
-  enableDrivePID = false;
+  //enableDrivePID = false;
  // User control code here, inside the loop
   while (1) {
     simpleDrive();
