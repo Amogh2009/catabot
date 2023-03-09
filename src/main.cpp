@@ -26,6 +26,7 @@
 #include "vex.h"
 #include <cmath>
 #include <string>
+#include "drivetrainPID.cpp"
 
 using namespace vex;
 // A global instance of competition
@@ -1064,6 +1065,7 @@ void autonomous(void) {
 /*  a VEX Competition.                                                       */
 /*---------------------------------------------------------------------------*/
 void usercontrol(void) {
+  enableDrivePID = false;
  // User control code here, inside the loop
   while (1) {
     simpleDrive();
