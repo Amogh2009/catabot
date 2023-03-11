@@ -40,7 +40,7 @@ void stopLimit(){
   limitStatus = false;
 }
 int autonselect = 1;
-int numOfAutons = 7;
+int numOfAutons = 9;
 
 int getSign (double inputValue) {
   if (inputValue > 0){
@@ -733,7 +733,7 @@ void moveDrivetrain(float vel, int dist, bool smooth, bool sync) {
 //----------------------------------------------------------------------------------
 
 int selected = 0;
-std::string autons[8] = {"Disabled", "Normal", "1 Roller + Low Goal", "1 Roller", "Roller Other Side", "Disc Shooter Two", "Skills", "Inertial Test"};
+std::string autons[9] = {"Disabled", "Normal", "1 Roller + Low Goal", "1 Roller", "Roller Other Side", "Disc Shooter Two", "Skills", "Inertial Test", "PID test"};
 int size = sizeof(autons);
 
 bool elevated = false;
@@ -1081,6 +1081,20 @@ void autonomous(void) {
      wait(1, seconds);
      break;
   } 
+  case 8: {
+    // move forward to the roller
+    desiredValue = 300;
+    enableDrivePID = false;
+    IntakeRoller.spin(forward);
+    wait(100, msec);
+    IntakeRoller.stop();
+    turnClockwise(86.5);
+    enableDrivePID = true;
+    desiredValue = 500;
+    wait(500, msec);
+    desiredValue = 0;
+    break;
+  }
 } // switch
 } // autonomous
 
