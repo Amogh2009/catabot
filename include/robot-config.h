@@ -34,3 +34,7 @@ void setStopping(vex::brakeType stoppingType);
 void drivetrainStop(void);
 void turnClockwise(double amount);
 void turnCounterClockwise(double amount);
+int drivePID ();
+extern bool enableDrivePID;
+extern int desiredValue;
+extern int desiredTurnValue;

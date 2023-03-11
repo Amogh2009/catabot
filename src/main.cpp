@@ -793,6 +793,7 @@ void pre_auton(void) {
 /*  a VEX Competition.                                                       */
 /*---------------------------------------------------------------------------*/
 void autonomous(void) {
+  vex::task PIDoperation(drivePID);
   int x = 980; // Degrees for moving forward to the neutral goal
   switch(selected){
     case 0:{ //Disabled
@@ -1090,7 +1091,7 @@ void autonomous(void) {
 /*  a VEX Competition.                                                       */
 /*---------------------------------------------------------------------------*/
 void usercontrol(void) {
-  //enableDrivePID = false;
+  enableDrivePID = false;
  // User control code here, inside the loop
   while (1) {
     simpleDrive();

@@ -1,8 +1,10 @@
-#include "vex.h";
+#include "vex.h"
 
 using namespace vex;
 
 bool enableDrivePID = true;
+int desiredValue = 200;
+int desiredTurnValue = 0;
 
 int drivePID () {
 
@@ -10,8 +12,8 @@ int drivePID () {
   double kI = 0.0;
   double kD = 0.0;
 
-  int desiredValue = 200;
-  int desiredTurnValue = 0;
+  double turnVolts = 0;
+
   int error; //SensorValue - DesiredValue : Positional Value
   int prevError = 0; //Position 20 miliseconds ago
   int derivative;
