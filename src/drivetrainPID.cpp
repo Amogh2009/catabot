@@ -2,12 +2,12 @@
 
 using namespace vex;
 
-bool enableDrivePID = true;
+bool enableDrivePID = false;
 int desiredValue = 200;
 int desiredTurnValue = 0;
 
 double kP = 0.25;
-double kD = 0.05;
+double kD = 0.1;
 double kI = 0.0001;
 
 int drivePID () {

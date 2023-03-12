@@ -19,7 +19,8 @@ motor catapult = motor(PORT12, ratio18_1, false);
 inertial Inertial = inertial(PORT20);
 limit LimitSwitchH = limit(Brain.ThreeWirePort.F);
 
-digital_out Expansion = digital_out(Brain.ThreeWirePort.D);
+digital_out Expansion = digital_out(Brain.ThreeWirePort.A);
+digital_out Expansion2 = digital_out(Brain.ThreeWirePort.B);
 digital_out pneumaticsIndexer = digital_out(Brain.ThreeWirePort.H);
 motor IntakeRoller = motor(PORT9, ratio18_1, true);
 motor Flywheel1 = motor(PORT16, ratio18_1, false);

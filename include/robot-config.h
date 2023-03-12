@@ -14,6 +14,7 @@ extern motor RightMiddle;
 extern motor catapult;
 extern inertial Inertial;
 extern digital_out Expansion;
+extern digital_out Expansion2;
 extern digital_out pneumaticsIndexer;
 extern motor IntakeRoller;
 extern motor Flywheel1;

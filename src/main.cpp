@@ -432,9 +432,11 @@ void flyPIDadjustment(double flywheel_target_speed_pct) {
 
 void expansionMovement(void) {
   if((Controller1.ButtonUp.pressing()) && (Controller1.ButtonDown.pressing()) && (Controller1.ButtonLeft.pressing()) && (Controller1.ButtonRight.pressing())) {
-    Expansion.set(true);
-  } else {
     Expansion.set(false);
+    Expansion2.set(false);
+  } else {
+    Expansion.set(true);
+    Expansion2.set(true);
   }
 }
 void pistonIndexerMovement(void) {
@@ -782,6 +784,8 @@ void pre_auton(void) {
  // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   pneumaticsIndexer.set(false);
+  Expansion.set(true);
+  Expansion2.set(true);
   calibrateInertialSensor();
   wait(1, sec);
   autonSelector();
@@ -802,8 +806,32 @@ void autonomous(void) {
     case 1:{ // Normal
       IntakeRoller.setVelocity(100, percent);
       //IntakeRoller.spinFor(reverse, 5000, degrees, false);
-      setVelocity(25);
+      setVelocity(10);
+      move(fwd, 850);
       IntakeRoller.spin(forward);
+      wait(250, msec);
+      IntakeRoller.stop();
+      move(reverse, 850);
+      turnCounterClockwise(86.5);
+      setVelocity(100);
+      moveWithoutStop(forward, 500);
+      turnCounterClockwise(85);
+      catapult.spin(fwd, 100, pct);
+      LimitSwitchH.pressed(catapultStop);
+      IntakeRoller.spin(reverse);
+      move(fwd, 600);
+      turnClockwise(37);
+      setVelocity(30);
+      move(fwd, 3000);
+      setVelocity(15);
+      move(fwd, 200);
+      turnClockwise(45.5);
+      IntakeRoller.stop();
+      IntakeRoller.spin(forward);
+      move(fwd, 250);
+      wait(400, msec);
+      IntakeRoller.stop();
+      /*IntakeRoller.spin(forward);
       catapult.spinFor(fwd, 2265, degrees, false);
       move(forward, 300);
       wait(15, msec);
@@ -832,7 +860,7 @@ void autonomous(void) {
       move(reverse, 445);
       wait(1250, msec);
       IntakeRoller.stop();
-      catapult.spinFor(forward, 150, degrees, true);
+      catapult.spinFor(forward, 150, degrees, true);*/
       break;
     }
     case 2: { //1 Roller + Low Goal
@@ -892,48 +920,26 @@ void autonomous(void) {
       break; 
     }
     case 4: { //Roller Other Side
-
-      LeftFront.spin(forward);
-      LeftBack.spin(forward);
-      RightFront.spin(forward);
-      RightBack.spin(forward);
-
-      wait(1900, msec);
-
-      LeftFront.stop();
-      LeftBack.stop();
-      RightFront.stop();
-      RightBack.stop();
-
-      wait(300, msec);
-
-      LeftFront.spin(forward);
-      LeftBack.spin(forward);
-      RightFront.spin(reverse);
-      RightBack.spin(reverse);
-
-      wait(950, msec);
-
-      LeftFront.stop();
-      LeftBack.stop();
-      RightFront.stop();
-      RightBack.stop();
-
-      wait(300, msec);
-
-      IntakeRoller.spinFor(reverse, 400, degrees, false);
-
-      LeftFront.spin(forward);
-      LeftBack.spin(forward);
-      RightFront.spin(forward);
-      RightBack.spin(forward);
-
-      wait(400, msec);
-
-      LeftFront.stop();
-      LeftBack.stop();
-      RightFront.stop();
-      RightBack.stop();
+      IntakeRoller.setVelocity(100, pct);
+      catapult.spin(fwd, 100, pct);
+      LimitSwitchH.pressed(catapultStop);
+      setVelocity(50);
+      IntakeRoller.spin(reverse);
+      move(fwd, 300);
+      turnClockwise(40);
+      setVelocity(15);
+      move(fwd, 1250);
+      wait(0.5, seconds);
+      move(reverse, 1050);
+      IntakeRoller.stop();
+      turnClockwise(83.5);
+      setVelocity(30);
+      move(fwd, 1250);
+      turnClockwise(40);
+      move(fwd, 250);
+      IntakeRoller.spin(forward);
+      wait(250, msec);
+      IntakeRoller.stop();
       break;
     }
     case 5: { //Disc Shooter 2
@@ -1083,10 +1089,11 @@ void autonomous(void) {
   } 
   case 8: {
     // move forward to the roller
+    enableDrivePID = true;
     desiredValue = 300;
-    enableDrivePID = false;
     IntakeRoller.spin(forward);
     wait(100, msec);
+    enableDrivePID = false;
     IntakeRoller.stop();
     turnClockwise(86.5);
     enableDrivePID = true;
